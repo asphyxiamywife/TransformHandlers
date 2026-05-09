@@ -5,8 +5,8 @@ import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 
 import java.io.*;
 import java.util.function.Consumer;
@@ -19,7 +19,7 @@ public class SettingsScreen {
         settings = Settings.Load();
 
         ConfigBuilder builder = ConfigBuilder.create()
-                .setTitle(Text.translatable("thsettings"))
+                .setTitle(Component.translatable("thsettings"))
                 .transparentBackground()
                 .setSavingRunnable(() -> {
                     Gson gson = new Gson();
@@ -43,12 +43,12 @@ public class SettingsScreen {
 
         ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 
-        ConfigCategory globals = builder.getOrCreateCategory(Text.translatable("thsettings.globals"));
+        ConfigCategory globals = builder.getOrCreateCategory(Component.translatable("thsettings.globals"));
 
-        globals.addEntry(entryBuilder.startTextDescription(Text.translatable("thsettings.globals.alpha")).build());
+        globals.addEntry(entryBuilder.startTextDescription(Component.translatable("thsettings.globals.alpha")).build());
 
         globals.addEntry(entryBuilder
-                .startBooleanToggle(Text.translatable("thsettings.globals.enable"), settings.enable)
+                .startBooleanToggle(Component.translatable("thsettings.globals.enable"), settings.enable)
                 .setSaveConsumer(n -> settings.enable = n)
                 .build()
         );
@@ -78,10 +78,10 @@ public class SettingsScreen {
                 "thsettings.globals.item.off.z", settings.ItemsOff.z, n -> settings.ItemsOff.z = n
         ).build());
 
-        ConfigCategory specials = builder.getOrCreateCategory(Text.translatable("thsettings.specials"));
+        ConfigCategory specials = builder.getOrCreateCategory(Component.translatable("thsettings.specials"));
 
-        specials.addEntry(entryBuilder.startTextDescription(Text.translatable("thsettings.specials.howto1")).build());
-        specials.addEntry(entryBuilder.startTextDescription(Text.translatable("thsettings.specials.howto2")).build());
+        specials.addEntry(entryBuilder.startTextDescription(Component.translatable("thsettings.specials.howto1")).build());
+        specials.addEntry(entryBuilder.startTextDescription(Component.translatable("thsettings.specials.howto2")).build());
 
         specials.addEntry(genSpecialTransform(entryBuilder, "thsettings.specials.charged_crossbow",
                 "thsettings.specials.charged_crossbow.a", settings.ChargedCrossbow.apply, n -> settings.ChargedCrossbow.apply = n,
@@ -99,9 +99,9 @@ public class SettingsScreen {
                 "thsettings.specials.filled_map.z", settings.FilledMap.z, n -> settings.FilledMap.z = n
         ).build());
 
-        ConfigCategory overrides = builder.getOrCreateCategory(Text.translatable("thsettings.overrides"));
+        ConfigCategory overrides = builder.getOrCreateCategory(Component.translatable("thsettings.overrides"));
 
-        overrides.addEntry(entryBuilder.startTextDescription(Text.translatable("thsettings.overrides.comingsoon")).build());
+        overrides.addEntry(entryBuilder.startTextDescription(Component.translatable("thsettings.overrides.comingsoon")).build());
 
         return builder.build();
     }
@@ -120,24 +120,24 @@ public class SettingsScreen {
                                                          String translatableZ,
                                                          long defaultZ,
                                                          Consumer<Long> consumerZ){
-        SubCategoryBuilder a = entryBuilder.startSubCategory(Text.translatable(subCategoryTranslatable)).setExpanded(false);
+        SubCategoryBuilder a = entryBuilder.startSubCategory(Component.translatable(subCategoryTranslatable)).setExpanded(false);
         a.add(entryBuilder
-                .startBooleanToggle(Text.translatable(translatableEnable), defaultEnable)
+                .startBooleanToggle(Component.translatable(translatableEnable), defaultEnable)
                 .setSaveConsumer(consumerEnable)
                 .build()
         );
         a.add(entryBuilder
-                .startLongSlider(Text.translatable(translatableX), defaultX, -30L, 30L)
+                .startLongSlider(Component.translatable(translatableX), defaultX, -30L, 30L)
                 .setSaveConsumer(consumerX)
                 .build()
         );
         a.add(entryBuilder
-                .startLongSlider(Text.translatable(translatableY), defaultY, -30L, 30L)
+                .startLongSlider(Component.translatable(translatableY), defaultY, -30L, 30L)
                 .setSaveConsumer(consumerY)
                 .build()
         );
         a.add(entryBuilder
-                .startLongSlider(Text.translatable(translatableZ), defaultZ, -30L, 30L)
+                .startLongSlider(Component.translatable(translatableZ), defaultZ, -30L, 30L)
                 .setSaveConsumer(consumerZ)
                 .build()
         );
@@ -161,29 +161,29 @@ public class SettingsScreen {
                                                           String translatableZ,
                                                           long defaultZ,
                                                           Consumer<Long> consumerZ){
-        SubCategoryBuilder a = entryBuilder.startSubCategory(Text.translatable(subCategoryTranslatable)).setExpanded(false);
+        SubCategoryBuilder a = entryBuilder.startSubCategory(Component.translatable(subCategoryTranslatable)).setExpanded(false);
         a.add(entryBuilder
-                .startBooleanToggle(Text.translatable(translatableAllow), defaultAllow)
+                .startBooleanToggle(Component.translatable(translatableAllow), defaultAllow)
                 .setSaveConsumer(consumerAllow)
                 .build()
         );
         a.add(entryBuilder
-                .startBooleanToggle(Text.translatable(translatableEnable), defaultEnable)
+                .startBooleanToggle(Component.translatable(translatableEnable), defaultEnable)
                 .setSaveConsumer(consumerEnable)
                 .build()
         );
         a.add(entryBuilder
-                .startLongSlider(Text.translatable(translatableX), defaultX, -30L, 30L)
+                .startLongSlider(Component.translatable(translatableX), defaultX, -30L, 30L)
                 .setSaveConsumer(consumerX)
                 .build()
         );
         a.add(entryBuilder
-                .startLongSlider(Text.translatable(translatableY), defaultY, -30L, 30L)
+                .startLongSlider(Component.translatable(translatableY), defaultY, -30L, 30L)
                 .setSaveConsumer(consumerY)
                 .build()
         );
         a.add(entryBuilder
-                .startLongSlider(Text.translatable(translatableZ), defaultZ, -30L, 30L)
+                .startLongSlider(Component.translatable(translatableZ), defaultZ, -30L, 30L)
                 .setSaveConsumer(consumerZ)
                 .build()
         );

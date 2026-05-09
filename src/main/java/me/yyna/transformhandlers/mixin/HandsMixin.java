@@ -1,33 +1,33 @@
 package me.yyna.transformhandlers.mixin;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import me.yyna.transformhandlers.SettingsScreen;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.client.render.command.OrderedRenderCommandQueue;
-import net.minecraft.client.render.item.HeldItemRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.CrossbowItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.Arm;
-import net.minecraft.util.Hand;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.renderer.ItemInHandRenderer;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.item.CrossbowItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(HeldItemRenderer.class)
+@Mixin(ItemInHandRenderer.class)
 public class HandsMixin {
-	@Inject(at = @At("HEAD"), method = "renderArmHoldingItem")
-	private void renderArmHoldingItem(MatrixStack matrices, OrderedRenderCommandQueue queue, int light, float equipProgress, float swingProgress, Arm arm, CallbackInfo ci){
-		if (arm == Arm.RIGHT && SettingsScreen.settings.enable && SettingsScreen.settings.ArmRight.enable){
+	@Inject(at = @At("HEAD"), method = "renderPlayerArm")
+	private void renderPlayerArm(PoseStack matrices, SubmitNodeCollector queue, int light, float equipProgress, float swingProgress, HumanoidArm arm, CallbackInfo ci){
+		if (arm == HumanoidArm.RIGHT && SettingsScreen.settings.enable && SettingsScreen.settings.ArmRight.enable){
 			matrices.translate((double)SettingsScreen.settings.ArmRight.x/10D, (double)SettingsScreen.settings.ArmRight.y/10D, (double)SettingsScreen.settings.ArmRight.z/10D);
-		}else if (arm == Arm.LEFT  && SettingsScreen.settings.enable && SettingsScreen.settings.ArmLeft.enable) {
+		}else if (arm == HumanoidArm.LEFT  && SettingsScreen.settings.enable && SettingsScreen.settings.ArmLeft.enable) {
 			matrices.translate((double)SettingsScreen.settings.ArmLeft.x/10D, (double)SettingsScreen.settings.ArmLeft.y/10D, (double)SettingsScreen.settings.ArmLeft.z/10D);
 		}
 	}
 
-	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;push()V", shift = At.Shift.AFTER), method = "renderFirstPersonItem")
-	private void renderFirstPersonItem(AbstractClientPlayerEntity player, float tickDelta, float pitch, Hand hand, float swingProgress, ItemStack item, float equipProgress, MatrixStack matrices, OrderedRenderCommandQueue queue, int light, CallbackInfo info){
+	@Inject(at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;pushPose()V", shift = At.Shift.AFTER), method = "renderArmWithItem")
+	private void renderArmWithItem(AbstractClientPlayer player, float tickDelta, float pitch, InteractionHand hand, float swingProgress, ItemStack item, float equipProgress, PoseStack matrices, SubmitNodeCollector queue, int light, CallbackInfo info){
 		if (!item.isEmpty() && SettingsScreen.settings.enable){
 			if (ChargedCrossbowEnabled(item)){
 				matrices.translate((double)SettingsScreen.settings.ChargedCrossbow.x/10D, (double)SettingsScreen.settings.ChargedCrossbow.y/10D, (double)SettingsScreen.settings.ChargedCrossbow.z/10D);
@@ -46,20 +46,20 @@ public class HandsMixin {
 		}
 	}
 
-	private static boolean MainHandEnabled(Hand hand){
-		return hand == Hand.MAIN_HAND && SettingsScreen.settings.ItemsMain.enable;
+	private static boolean MainHandEnabled(InteractionHand hand){
+		return hand == InteractionHand.MAIN_HAND && SettingsScreen.settings.ItemsMain.enable;
 	}
-	private static boolean OffHandEnabled(Hand hand){
-		return hand == Hand.OFF_HAND && SettingsScreen.settings.ItemsOff.enable;
+	private static boolean OffHandEnabled(InteractionHand hand){
+		return hand == InteractionHand.OFF_HAND && SettingsScreen.settings.ItemsOff.enable;
 	}
 	private static boolean CheckForDisabledSpecials(ItemStack item){
-		return !(item.isOf(Items.CROSSBOW) && CrossbowItem.isCharged(item) && !SettingsScreen.settings.ChargedCrossbow.apply)
-				&& !(item.isOf(Items.FILLED_MAP) && !SettingsScreen.settings.FilledMap.apply);
+		return !(item.is(Items.CROSSBOW) && CrossbowItem.isCharged(item) && !SettingsScreen.settings.ChargedCrossbow.apply)
+				&& !(item.is(Items.FILLED_MAP) && !SettingsScreen.settings.FilledMap.apply);
 	}
 	private static boolean ChargedCrossbowEnabled(ItemStack item){
-		return item.isOf(Items.CROSSBOW) && CrossbowItem.isCharged(item) && SettingsScreen.settings.ChargedCrossbow.enable;
+		return item.is(Items.CROSSBOW) && CrossbowItem.isCharged(item) && SettingsScreen.settings.ChargedCrossbow.enable;
 	}
 	private static boolean FilledMapEnabled(ItemStack item){
-		return item.isOf(Items.FILLED_MAP) && SettingsScreen.settings.FilledMap.enable;
+		return item.is(Items.FILLED_MAP) && SettingsScreen.settings.FilledMap.enable;
 	}
 }
