@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "transformhandlers",
-  "version": "2.0.0-alpha.2+1.20",
+  "version": "${version}",
 
   "name": "Transform Handlers",
   "description": "Allows first person arm & item repositioning",
@@ -9,9 +9,7 @@
     "yyna"
   ],
   "contact": {
-    "homepage": "https://modrinth.com/mod/transformhandler",
-    "issues": "https://github.com/yynaa/TransformHandlers/issues",
-    "sources": "https://github.com/yynaa/TransformHandlers"
+    "issues": "https://github.com/asphyxiamywife/TransformHandlers/issues"
   },
 
   "license": "CC0-1.0",
@@ -31,12 +29,9 @@
   ],
 
   "depends": {
-    "fabricloader": ">=0.14.6",
+    "fabricloader": ">=0.19.2",
     "fabric": "*",
-    "minecraft": ">=1.20",
-    "java": ">=17"
-  },
-  "suggests": {
-    "another-mod": "*"
+    "minecraft": ">=1.21.9 <=1.21.11",
+    "java": ">=21"
   }
 }

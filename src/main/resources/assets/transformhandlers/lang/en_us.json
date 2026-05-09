@@ -1,7 +1,7 @@
 {
   "thsettings": "Transform Handlers Settings Menu",
   "thsettings.globals": "Global Transforms",
-  "thsettings.globals.alpha": "This is an alpha! Please report bugs at https://github.com/yynaa/TransformHandlers/issues",
+  "thsettings.globals.alpha": "This is a fork of yyna's work! Please report bugs at https://github.com/asphyxiamywife/TransformHandlers/issues",
   "thsettings.globals.enable": "Enable All Transforms",
   "thsettings.globals.arm.right": "Right Arm",
   "thsettings.globals.arm.right.e": "Enable Right Arm Transforms",
