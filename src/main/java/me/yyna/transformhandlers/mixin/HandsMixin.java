@@ -26,8 +26,8 @@ public class HandsMixin {
 		}
 	}
 
-	@Inject(at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;pushPose()V", shift = At.Shift.AFTER), method = "renderArmWithItem")
-	private void renderArmWithItem(AbstractClientPlayer player, float tickDelta, float pitch, InteractionHand hand, float swingProgress, ItemStack item, float equipProgress, PoseStack matrices, SubmitNodeCollector queue, int light, CallbackInfo info){
+	@Inject(at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;pushPose()V", shift = At.Shift.AFTER), method = "submitArmWithItem")
+	private void submitArmWithItem(AbstractClientPlayer player, float tickDelta, float pitch, InteractionHand hand, float swingProgress, ItemStack item, float equipProgress, PoseStack matrices, SubmitNodeCollector queue, int light, CallbackInfo info){
 		if (!item.isEmpty() && SettingsScreen.settings.enable){
 			if (ChargedCrossbowEnabled(item)){
 				matrices.translate((double)SettingsScreen.settings.ChargedCrossbow.x/10D, (double)SettingsScreen.settings.ChargedCrossbow.y/10D, (double)SettingsScreen.settings.ChargedCrossbow.z/10D);
