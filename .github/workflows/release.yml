@@ -12,7 +12,6 @@ jobs:
     permissions:
       contents: write
       attestations: write
-      artifact-metadata: write
       id-token: write
 
     steps:
@@ -40,7 +39,7 @@ jobs:
         id: jar
         shell: bash
         run: |
-          mapfile -t jars < <(find build/libs -maxdepth 1 -type f -name '*.jar' ! -name '*-sources.jar' | sort)
+          mapfile -t jars < <(find build/libs -maxdepth 1 -type f -name '*.jar' ! -name '*-sources.jar' ! -name '*-javadoc.jar' | sort)
           if [[ ${#jars[@]} -ne 1 ]]; then
             printf 'Expected exactly one release jar, found %s:\n' "${#jars[@]}" >&2
             printf '%s\n' "${jars[@]}" >&2
@@ -53,7 +52,7 @@ jobs:
         with:
           subject-path: ${{ steps.jar.outputs.path }}
 
-      - name: create immutable-compatible release
+      - name: create release
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
