@@ -2,9 +2,10 @@ package me.yyna.transformhandlers.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import me.yyna.transformhandlers.SettingsScreen;
-import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.client.renderer.ItemInHandRenderer;
+import net.minecraft.client.renderer.FirstPersonHandsAndItemsRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.state.level.FirstPersonHandsAndItemsRenderState;
+import net.minecraft.client.renderer.state.level.PlayerRenderState;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.item.CrossbowItem;
@@ -15,10 +16,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ItemInHandRenderer.class)
+@Mixin(FirstPersonHandsAndItemsRenderer.class)
 public class HandsMixin {
 	@Inject(at = @At("HEAD"), method = "renderPlayerArm")
-	private void renderPlayerArm(PoseStack matrices, SubmitNodeCollector queue, int light, float equipProgress, float swingProgress, HumanoidArm arm, CallbackInfo ci){
+	private void renderPlayerArm(PoseStack matrices, SubmitNodeCollector queue, int light, float equipProgress, float swingProgress, HumanoidArm arm, PlayerRenderState playerRenderState, CallbackInfo ci){
 		if (arm == HumanoidArm.RIGHT && SettingsScreen.settings.enable && SettingsScreen.settings.ArmRight.enable){
 			matrices.translate((double)SettingsScreen.settings.ArmRight.x/10D, (double)SettingsScreen.settings.ArmRight.y/10D, (double)SettingsScreen.settings.ArmRight.z/10D);
 		}else if (arm == HumanoidArm.LEFT  && SettingsScreen.settings.enable && SettingsScreen.settings.ArmLeft.enable) {
@@ -27,7 +28,7 @@ public class HandsMixin {
 	}
 
 	@Inject(at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;pushPose()V", shift = At.Shift.AFTER), method = "submitArmWithItem")
-	private void submitArmWithItem(AbstractClientPlayer player, float tickDelta, float pitch, InteractionHand hand, float swingProgress, ItemStack item, float equipProgress, PoseStack matrices, SubmitNodeCollector queue, int light, CallbackInfo info){
+	private void submitArmWithItem(PlayerRenderState playerRenderState, FirstPersonHandsAndItemsRenderState handsAndItemsRenderState, float tickDelta, float pitch, InteractionHand hand, float swingProgress, ItemStack item, float equipProgress, PoseStack matrices, SubmitNodeCollector queue, int light, CallbackInfo info){
 		if (!item.isEmpty() && SettingsScreen.settings.enable){
 			if (ChargedCrossbowEnabled(item)){
 				matrices.translate((double)SettingsScreen.settings.ChargedCrossbow.x/10D, (double)SettingsScreen.settings.ChargedCrossbow.y/10D, (double)SettingsScreen.settings.ChargedCrossbow.z/10D);
