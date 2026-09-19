@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.FirstPersonHandsAndItemsRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.state.level.FirstPersonHandsAndItemsRenderState;
 import net.minecraft.client.renderer.state.level.PlayerRenderState;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.item.CrossbowItem;
@@ -55,12 +56,15 @@ public class HandsMixin {
 	}
 	private static boolean CheckForDisabledSpecials(ItemStack item){
 		return !(item.is(Items.CROSSBOW) && CrossbowItem.isCharged(item) && !SettingsScreen.settings.ChargedCrossbow.apply)
-				&& !(item.is(Items.FILLED_MAP) && !SettingsScreen.settings.FilledMap.apply);
+				&& !(IsFilledMap(item) && !SettingsScreen.settings.FilledMap.apply);
 	}
 	private static boolean ChargedCrossbowEnabled(ItemStack item){
 		return item.is(Items.CROSSBOW) && CrossbowItem.isCharged(item) && SettingsScreen.settings.ChargedCrossbow.enable;
 	}
 	private static boolean FilledMapEnabled(ItemStack item){
-		return item.is(Items.FILLED_MAP) && SettingsScreen.settings.FilledMap.enable;
+		return IsFilledMap(item) && SettingsScreen.settings.FilledMap.enable;
+	}
+	private static boolean IsFilledMap(ItemStack item){
+		return item.has(DataComponents.MAP_ID);
 	}
 }
