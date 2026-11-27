@@ -19,8 +19,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(FirstPersonHandsAndItemsRenderer.class)
 public class HandsMixin {
-	@Inject(at = @At("HEAD"), method = "renderPlayerArm")
-	private void renderPlayerArm(PoseStack matrices, SubmitNodeCollector queue, int light, float equipProgress, float swingProgress, HumanoidArm arm, PlayerRenderState playerRenderState, CallbackInfo ci){
+	@Inject(at = @At("HEAD"), method = "submitPlayerArm")
+	private void submitPlayerArm(PoseStack matrices, SubmitNodeCollector queue, int light, float equipProgress, float swingProgress, InteractionHand hand, HumanoidArm arm, PlayerRenderState playerRenderState, CallbackInfo ci){
 		if (arm == HumanoidArm.RIGHT && SettingsScreen.settings.enable && SettingsScreen.settings.ArmRight.enable){
 			matrices.translate((double)SettingsScreen.settings.ArmRight.x/10D, (double)SettingsScreen.settings.ArmRight.y/10D, (double)SettingsScreen.settings.ArmRight.z/10D);
 		}else if (arm == HumanoidArm.LEFT  && SettingsScreen.settings.enable && SettingsScreen.settings.ArmLeft.enable) {
